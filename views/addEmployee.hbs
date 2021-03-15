@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Add Employee</title>
+        <link rel="stylesheet" href="css/theme.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    </head>
+    <body>
+        {{> header}}
+        <div class="container">
+            <br/>
+            <h1>Add Employee</h1>
+            <br/>
+            {{#if user}}
+                <div class="row">
+                    <main class="col-md-12">
+                        <form method = "post" action = "/employees/add">
+                            <fieldset>
+                                <legend>Personal Information</legend>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>First Name:</label>
+                                            <input class="form-control" name = "firstName" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Last Name:</label>
+                                            <input class="form-control" name = "lastName" type="text"  />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Email:</label>
+                                            <input class="form-control" name = "email" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Social Security Num:</label>
+                                            <input class="form-control" name = "SSN" type="text"  />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Address (Street):</label>
+                                            <input class="form-control" name = "addressStreet" type="text"  />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label >Address (City):</label>
+                                        <input class="form-control" id="addressCity" name = "addressCity" type="text"  />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Address (State):</label>
+                                            <input class="form-control" name = "addressState" type="text"  />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Address (Zip Code):</label>
+                                            <input class="form-control" name = "addressPostal" type="text" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <hr>
+                            <fieldset>
+                                <legend>Company Information</legend>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Manager:</label>
+                                            <input class="form-control" name = "isManager" type="checkbox" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label >Employee's Manager Number:</label>
+                                            <input class="form-control" name = "employeeManagerNum" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Status:</label><br />
+                                            <label class="checkbox-inline">
+                                                <input type="radio" name = "status" value="Full Time" /> Full Time
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="radio" name = "status" value="Part Time" /> Part Time
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Department</label>
+                                            {{#if departments}}
+                                                <select class="form-control" name="department" id="department">
+                                                    <option value="">Select Department</option>
+                                                    {{#each departments}}
+                                                    <option value="{{departmentId}}">{{departmentName}}</option>
+                                                    {{/each}}
+                                                </select>
+                                            {{else}}
+                                                <div>No Department Available</div>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Hire Date</label>
+                                            <input class="form-control" name = "hireDate" type="text" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                                    
+                            <hr />
+                                    
+                            <input type="submit" class="btn btn-primary float-right" value="Add Employee" /><br /><br /><br />
+                        </form>
+                    </main>
+                </div>
+            {{else}}
+                <p class="errorMsg">You are not authorized to see this page.</p>
+            {{/if}}
+        </div>
+        {{> footer}}
+    </body>
+</html>

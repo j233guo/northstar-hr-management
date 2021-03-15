@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dashboard</title>
+        <link rel="stylesheet" href="css/theme.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    </head>
+    <body>
+        {{> header}}
+
+        <div class="container">
+            <br/>
+            <h1>Dashboard</h1>
+            <br>
+            {{#if user}}
+                <div style="text-align: center;">
+                    <p>
+                        <a href="/employees"><button type="button" class="btn btn-primary btn-lg">Employee</button></a><br/>
+                    </p>
+                    <p>
+                        <a href="/departments"><button type="button" class="btn btn-success btn-lg">Department</button></a><br/>
+                    </p>
+                    <p>
+                        <button type="button" class="btn btn-info btn-lg">System Administration</button>
+                    </p>
+                </div>
+            {{else}}
+                <p class="errorMsg">You are not authorized to see this page.</p>
+            {{/if}}
+        </div>
+        
+        {{> footer}}
+    </body>
+</html>

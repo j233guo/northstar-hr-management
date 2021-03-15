@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Log In</title>
+        <link rel="stylesheet" href="css/theme.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    </head>
+    <body>
+        
+        {{> header}}
+        
+        <div class="container">
+            <br/>
+            <h1>Log In</h1>
+            <br>
+
+            {{#if errorMsg}}
+                <p class="errorMsg">{{errorMsg}}</p>
+            {{/if}}
+
+            {{#if user}}
+                <p>You are already logged in, {{user.username}}. <a href="/logout">Log out</a></p>
+            {{else}}
+            <form method="post" action="/login">
+                <div class="form-group col-md-6">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control " id="username" placeholder="Username" name="username">
+                </div>
+                <br>
+                <div class="form-group col-md-6">
+                    <label for="pwd">Password</label>
+                    <input type="password" class="form-control " id="pwd" placeholder="Password" name="pwd">
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">Log In</button>
+            </form>
+            {{/if}}
+        </div>
+
+        {{> footer}}
+    </body>
+</html>

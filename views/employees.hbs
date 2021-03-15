@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Employees</title>
+        <link rel="stylesheet" href="css/theme.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    </head>
+    <body>
+        {{> header}}
+
+        <div class="container">
+            <br/>
+            <h1>Employees</h1>
+            <br>
+
+            {{#if user}}
+            <nav class="navbar navbar-light bg-light">
+                <div class="container-fluid">
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search Employee" aria-label="Search">
+                        <button class="btn btn-info" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </button>
+                    </form>
+                    <button type="button" class="btn btn-success">Add Employee</button>
+                </div>
+            </nav>
+            <div class = "table-responsive">
+                <table class = "table">
+                    <tr>
+                        <th>Employee Num</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Manager ID</th>
+                        <th>Status</th>
+                        <th>Department</th>
+                        <th>Hired On</th>
+                        <th></th>
+                    </tr>
+                    {{#each employees}}
+                        <tr>
+                            <td>{{employeeNum}}</td>
+                            <td><a href = "/employee/{{employeeNum}}">{{firstName}} {{lastName}}</a></td>
+                            <td><a href = "mailto:{{email}}">{{email}}</a></td>
+                            <td>{{addressStreet}}, {{addressCity}}, {{addressState}} {{addressPostal}}</td>
+                            <td>{{employeeManagerNum}}</td>
+                            <td>{{status}}</td>
+                            <td><a href = "/employees?department={{department}}">{{department}}</a></td>
+                            <td>{{hireDate}}</td>
+                            <td>
+                                <a href="/employees/delete/{{employeeNum}}">
+                                    <button class = "btn btn-danger">Remove</button>
+                                </a>
+                            </td>
+                        </tr>
+                    {{/each}}
+                </table>
+            </div>  
+            {{#unless employees}}
+                <div class="col-md-12 text-center">
+                    <strong>{{message}}</strong>
+                </div>
+            {{/unless}}
+            {{else}}
+                <p class="errorMsg">You are not authorized to see this page.</p>
+            {{/if}}
+        </div>
+        
+        {{> footer}}
+    </body>
+
+</html>

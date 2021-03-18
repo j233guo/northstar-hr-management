@@ -296,6 +296,7 @@ app.get("/sysadm/:usrNam", (req, res) => {
 });
 
 app.post("/sysadm/update", (req, res) => {
+    req.body.isManager = (req.body.isManager) ? true: false;
     db.updateSysAdm(req.body)
     .then(() => {res.redirect("/sysadms");})
     .catch((err) => {

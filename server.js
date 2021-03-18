@@ -7,7 +7,7 @@ const db = require(path.join(__dirname, "/modules/dbModule"));
 const clientSessions = require("client-sessions");
 
 // SETUP
-const HTTP_PORT = process.env.PORT || 8080;
+const HTTP_PORT = process.env.PORT || 7080;
 
 app.use(bodyParser.urlencoded({ 
     extended: true

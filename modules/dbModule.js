@@ -99,6 +99,18 @@ module.exports.getDepartments = function() {
     });
 }
 
+module.exports.getSysAdms = function() {
+    return new Promise((resolve, reject) => {
+        SysAdm.findAll().then((data) => {
+            data = data.map(value => value.dataValues);
+            resolve(data);        
+        }).catch((err) => {
+            console.log(err);
+            reject("no results returned");
+        })
+    })
+}
+
 module.exports.getEmployeesByDepartment = function(department) {
     return new Promise((resolve, reject) => {
         Employee.findAll({
@@ -155,6 +167,20 @@ module.exports.getDepartmentById = function(id) {
     });
 }
 
+module.exports.getSysAdmByNam = function(nam) {
+    return new Promise((resolve, reject) => {
+        SysAdm.findAll({
+            where: {username: nam}
+        }).then((data) => {
+            data = data.map(value => value.dataValues);
+            resolve(data[0]);
+        }).catch((err) => {
+            console.log(err);
+            reject("no results returned");
+        });
+    });
+}
+
 module.exports.addEmployee = function(employeeData) {
     return new Promise((resolve, reject) => {
         employeeData.isManager = (employeeData.isManager) ? true : false;
@@ -183,6 +209,31 @@ module.exports.addDepartment = function(departmentData) {
         }).catch(() => {
             reject("unable to create department");
         });
+    });
+}
+
+module.exports.addSysAdm = function(sysadmData) {
+    return new Promise((resolve, reject) => {
+        for (let prop in sysadmData) {
+            if (sysadmData[prop] == '') {
+                sysadmData[prop] = null;
+            }
+        }
+        SysAdm.findAll({
+            where: {username: sysadmData.username}
+        }).then((data) => {
+            if (data.length != 0) {
+                reject("duplicate user name");
+            } else {
+                SysAdm.create(sysadmData).then(() => {
+                    resolve("user account added");
+                }).catch(() => {
+                    reject("unable to create user account");
+                });
+                }
+        }).catch(() => {
+            reject("unable to create user account");
+        })
     });
 }
 
@@ -221,6 +272,23 @@ module.exports.updateDepartment = function(departmentData) {
     });
 }
 
+module.exports.updateSysAdm = function(sysadmData) {
+    return new Promise((resolve, reject) => {
+        for (let prop in sysadmData) {
+            if (sysadmData[prop] == '') {
+                sysadmData[prop] = null;
+            }
+        }
+        SysAdm.update(sysadmData,{
+            where: {username: sysadmData.username}
+        }).then(() => {
+            resolve("User account successfully updated");
+        }).catch(() => {
+            reject("unable to update user account");
+        });
+    });
+}
+
 module.exports.deleteEmployeeByNum = function(empNum) {
     return new Promise((resolve, reject) => {
         Employee.destroy({
@@ -244,3 +312,16 @@ module.exports.deleteDepartmentById = function(id) {
         })
     });
 }
+
+module.exports.deleteSysAdmByNam = function(usrNam) {
+    return new Promise((resolve, reject) => {
+        SysAdm.destroy({
+            where: {username: usrNam}
+        }).then(() => {
+            resolve("User account successfully deleted");
+        }).catch(() =>{
+            reject("unable to delete user account");
+        })
+    });
+}
+

@@ -246,6 +246,67 @@ app.post("/department/search", (req, res) => {
     res.redirect("/department/" + req.body.departmentId)
 });
 
+// SYSADMS
+app.get("/sysadms", (req, res) => {
+    db.getSysAdms()
+    .then((data) => {
+        if (data.length > 0) {
+            res.render("sysadms", {sysadms: data, user: req.session.user});
+        } else {
+            res.render("sysadms", {message: "no results", user: req.session.user})
+    }}).catch(() => {
+        res.render("sysadms", {message: "Encountered error"});
+    })
+});
+
+app.get("/sysadms/add", (req,res)=>{
+    res.render("addSysAdm", {user: req.session.user});
+}); 
+
+app.post("/sysadms/add", (req, res)=>{
+    db.addSysAdm(req.body)
+    .then(() => {
+        res.redirect("/sysadms")
+    }).catch((err) => {
+        // res.status(500).send(err);
+        res.status(404).send(err);
+    })    
+});
+
+app.get("/sysadms/delete/:usrNam", (req, res) => {
+    db.deleteSysAdmByNam(req.params.usrNam)
+    .then(() => {
+        res.redirect("/sysadms");
+    }).catch((err) => {
+        res.status(500).send(err);
+    })
+})
+
+app.get("/sysadm/:usrNam", (req, res) => {
+    db.getSysAdmByNam(req.params.usrNam)
+    .then((data) => {
+        if (data) {
+            res.render("updateSysAdm", {sysadm: data, user: req.session.user});
+        } else {
+            res.status(404).send("User Account Not Found");
+        }
+    }).catch(() => {
+        res.render("updateSysAdm", {message: "Encountered Error", user: req.session.user});
+    })
+});
+
+app.post("/sysadm/update", (req, res) => {
+    db.updateSysAdm(req.body)
+    .then(() => {res.redirect("/sysadms");})
+    .catch((err) => {
+        res.status(500).send(err);
+    })
+});
+
+app.post("/sysadm/search", (req, res) => {
+    res.redirect("/sysadm/" + req.body.username)
+});
+
 // INITIALIZE
 db.initialize().then(() => {
     app.listen(HTTP_PORT, ()=>{

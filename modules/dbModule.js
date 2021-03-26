@@ -235,6 +235,12 @@ module.exports.deleteEmployeeByNum = function(empNum) {
 
 module.exports.deleteDepartmentById = function(id) {
     return new Promise((resolve, reject) => {
+    //  var answer = confirm ("Are you sure you want to delete this item ?");
+    //  console(answer);
+    //  alert(answer);
+    //  reject();
+    //  return;
+
         Department.destroy({
             where: {departmentId: id}
         }).then(() => {

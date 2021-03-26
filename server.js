@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
 const db = require(path.join(__dirname, "/modules/dbModule"));
 const clientSessions = require("client-sessions");
+const yesno = require('yesno');
 
 // SETUP
 const HTTP_PORT = process.env.PORT || 8080;
@@ -213,6 +214,12 @@ app.post("/departments/add", (req, res)=>{
 });
 
 app.get("/departments/delete/:id", (req, res) => {
+    if (window.confirm("Press a button!")) {
+        txt = "You pressed OK!";
+      } else {
+        txt = "You pressed Cancel!";
+      }
+     return;
     db.deleteDepartmentById(req.params.id)
     .then(() => {
         res.redirect("/departments");

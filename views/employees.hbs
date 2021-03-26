@@ -40,19 +40,22 @@
                         <th>Status</th>
                         <th>Department</th>
                         <th>Hired On</th>
-                        <th></th>
+                        <th>Options</th>
                     </tr>
                     {{#each employees}}
                         <tr>
                             <td>{{employeeNum}}</td>
-                            <td><a href = "/employee/{{employeeNum}}">{{firstName}} {{lastName}}</a></td>
+                            <td>{{firstName}} {{lastName}}</td>
                             <td><a href = "mailto:{{email}}">{{email}}</a></td>
                             <td>{{addressStreet}}, {{addressCity}}, {{addressState}} {{addressPostal}}</td>
                             <td>{{employeeManagerNum}}</td>
                             <td>{{status}}</td>
                             <td><a href = "/employees?department={{department}}">{{department}}</a></td>
                             <td>{{hireDate}}</td>
-                            <td>
+                            <td class="buttonlink">
+                                <a href = "/employee/{{employeeNum}}">
+                                    <button class = "btn btn-warning">Update</button>
+                                </a>
                                 <a href="/employees/delete/{{employeeNum}}">
                                     <button class = "btn btn-danger">Remove</button>
                                 </a>

@@ -5,9 +5,10 @@ const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
 const db = require(path.join(__dirname, "/modules/dbModule"));
 const clientSessions = require("client-sessions");
+const hash = require("object-hash");
 
 // SETUP
-const HTTP_PORT = process.env.PORT || 7080;
+const HTTP_PORT = process.env.PORT || 8080;
 
 app.use(bodyParser.urlencoded({ 
     extended: true
@@ -38,7 +39,7 @@ app.set("view engine", ".hbs");
 app.use(clientSessions({
     cookieName: 'session',
     secret: 'northstarhrmgmt',
-    duration: 24 * 60 * 60 * 1000,
+    duration: 5 * 60 * 1000,
     activeDuration: 1000 * 60 * 5
 }));
 

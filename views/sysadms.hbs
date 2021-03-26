@@ -32,14 +32,12 @@
                 <table class = "table">
                     <tr>
                         <th>User Name</th>
-                        <th>Password</th>
                         <th>Is Manager</th>
-                        <th></th>
+                        <th>Options</th>
                     </tr>
                     {{#each sysadms}}
                     <tr>
-                        <td><a href = "/sysadm/{{username}}">{{username}}</a></td>
-                        <td>{{pwd}}</td>
+                        <td>{{username}}</td>
                         <td>
                             {{#if isManager}}
                                 Yes
@@ -47,7 +45,10 @@
                                 No
                             {{/if}}
                         </td>
-                        <td>
+                        <td class="buttonlink">
+                            <a href="/sysadm/{{username}}">
+                                <button class = "btn btn-warning">Update</button>
+                            </a>
                             <a href="/sysadms/delete/{{username}}">
                                 <button class = "btn btn-danger">Remove</button>
                             </a>

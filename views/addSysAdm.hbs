@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Add User Account</title>
+        <link rel="stylesheet" href="css/theme.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    </head>
+    <body>
+        {{> header}}
+        <div class="container">
+            <br/>
+            <h1>Add User Account</h1>
+            <br/>
+            {{#if user}}
+                <div class="row">
+                    <main class="col-md-12">
+                        <form method = "post" action = "/sysadms/add">
+                            <fieldset>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>User Name</label>
+                                            <input class="form-control" name = "username" type="text"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Password</label>
+                                            <input class="form-control" name = "pwd" type="text" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row"></div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Is Manager:</label>
+                                            <br/>
+                                            <input class="form-check-input" name = "isManager" type="checkbox" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <hr />
+                            <input type="submit" class="btn btn-primary float-right" value="Add User Account" /><br /><br /><br />
+                        </form>
+                    </main>
+                </div>
+            {{else}}
+                <p class="errorMsg">You are not authorized to see this page.</p>
+            {{/if}}
+        </div>
+        {{> footer}}
+    </body>
+</html>

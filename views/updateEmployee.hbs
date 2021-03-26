@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                        <label for="SSN">Social Security Num:</label>
+                                        <label for="SSN">Social Insurance Number:</label>
                                         <input class="form-control" id="SSN" name="SSN" type="text" value="{{viewData.employee.SSN}}" readonly/>
                                         </div>
                                     </div>
@@ -54,19 +54,19 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                        <label for="addressCity">Address (City):</label>
+                                        <label for="addressCity">Address (City/Town):</label>
                                         <input class="form-control" id="addressCity" name="addressCity" type="text" value="{{viewData.employee.addressCity}}" />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                        <label for="addressState">Address (State):</label>
+                                        <label for="addressState">Address (Province/State):</label>
                                         <input class="form-control" id="addressState" name="addressState" type="text" value="{{viewData.employee.addressState}}" />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                        <label for="addressPostal">Address (Zip Code):</label>
+                                        <label for="addressPostal">Address (Postal Code):</label>
                                         <input class="form-control" id="addressPostal" name="addressPostal" type="text" value="{{viewData.employee.addressPostal}}" />
                                         </div>
                                     </div>
@@ -75,8 +75,9 @@
                                 <div class = "row">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                        <label for="isManager">Manager:</label>
-                                        <input class="form-control" id="isManager" name="isManager" type="checkbox" 
+                                        <label for="isManager">Is Manager:</label>
+                                        <br/>
+                                        <input class="form-check-input" id="isManager" name="isManager" type="checkbox" 
                                             {{#if viewData.employee.isManager}}
                                                 checked
                                             {{/if}}/>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>System Administration</title>
+        <link rel="stylesheet" href="css/theme.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    </head>
+    <body>
+        {{> header}}
+        <div class="container">
+            <br/>
+            <h1>User Account Information</h1>
+            <br/>
+            {{#if user}}
+                <div class="row">
+                    <div class="col-md-12">
+                    <br>
+                    <h2>User Name: {{sysadm.username}}</h2>
+                    <hr />
+                        <form method = "POST" action = "/sysadm/update">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input name = "username" type = "hidden" value = "{{sysadm.username}}">
+                                        <label for="pwd">Password</label>
+                                        <input class="form-control" id="pwd" name="pwd" type="text" value="{{sysadm.pwd}}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="isManager">Is Manager:</label>
+                                        <br/>
+                                        <input class="form-check-input" id="isManager" name="isManager" type="checkbox" 
+                                            {{#if sysadm.isManager}}
+                                                checked
+                                            {{/if}}/>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <input type="submit" class="btn btn-primary float-right" value="Update User Account" /><br /><br /><br />
+                        </form>
+                    </div>
+                </div>
+            {{else}}
+                <p class="errorMsg">You are not authorized to see this page.</p>
+            {{/if}}
+        </div>
+        {{> footer}}
+    </body>
+</html>

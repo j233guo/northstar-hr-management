@@ -6,6 +6,7 @@ const exphbs = require("express-handlebars");
 const db = require(path.join(__dirname, "/modules/dbModule"));
 const clientSessions = require("client-sessions");
 const yesno = require('yesno');
+const prompts = require('prompts');
 
 // SETUP
 const HTTP_PORT = process.env.PORT || 7080;
@@ -214,6 +215,17 @@ app.post("/departments/add", (req, res)=>{
 });
 
 app.get("/departments/delete/:id", (req, res) => {
+    (async () => {
+        const response = await prompts({
+          type: 'number',
+          name: 'value',
+          message: 'How old are you?',
+          validate: value => value < 18 ? `Nightclub is 18+ only` : true
+        });
+       
+        console.log(response); // => { value: 24 }
+      })();
+    return;
     db.deleteDepartmentById(req.params.id)
     .then(() => {
         res.redirect("/departments");

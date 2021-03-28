@@ -43,12 +43,6 @@ app.use(clientSessions({
     activeDuration: 1000 * 60 * 5
 }));
 
-const user = {
-    username: "admin",
-    pwd: "admin",
-    isManager: true
-}
-
 // ROUTES
 app.get("/", (req, res) => {
     res.render("home", {user: req.session.user})
@@ -65,20 +59,28 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
     const username = req.body.username;
     const pwd = req.body.pwd;
-    // validation here (go to the database)
-    console.log(username, pwd)
-    if (username === "" || pwd === "") {
-        return res.render("login", {errorMsg: "Both fields are required!", user: req.session.user, layout: false});
+    if (username === "" && pwd === "") {
+        return res.render("login", {errorMsg: "Username and Password are required!", user: req.session.user, layout: false});
+    } else if (username !== "" && pwd === "") {
+        return res.render("login", {errorMsg: "Password is required!", user: req.session.user, layout: false});
+    } else if (username === "" && pwd !== "") {
+        return res.render("login", {errorMsg: "Username is required!", user: req.session.user, layout: false});
     }
-    if (username === user.username && pwd === user.pwd) {
-        req.session.user = {
-            username: user.username,
-        };
-        res.redirect("/dashboard")
-    } else {
-        res.render("login", {errorMsg: "The login credentials do not match.", user: req.session.user, layout: false});
-    }
-
+    db.validateLogin(req.body).then((usr)=>{
+        if(!usr) {
+            res.render("login", {errorMsg: "Username does not exist!", user: req.session.user, layout: false});
+        } else if (usr.pwd !== hash(pwd)) {
+            res.render("login", {errorMsg: "The login credentials do not match!", user: req.session.user, layout: false});
+        } else {
+            req.session.user = {
+                username: usr.username,
+                isManager: usr.isManager
+            };
+            res.redirect("/dashboard")
+        }        
+    }).catch((err)=>{
+        res.render("login", {errorMsg: `An error occurred: ${err}`, user: req.session.user, layout: false});
+    });
 });
 
 app.get("/logout", (req, res) => {
@@ -87,7 +89,7 @@ app.get("/logout", (req, res) => {
 })
 
 app.get("/about", (req, res) => {
-    res.render("about", {layout: false})
+    res.render("about", {user: req.session.user})
 })
 
 // EMPLOYEES

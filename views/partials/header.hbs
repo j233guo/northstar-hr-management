@@ -2,8 +2,8 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="/">NorthStar HR Management</a>
         <span class="navbar-text">
-            {{#if user}}
-            Logged in as: {{user.username}}&nbsp;
+            {{#if username}}
+            Logged in: {{username}}&nbsp;
             <a href="/logout"><button type="button" class="btn btn-secondary btn-sm">Log Out</button></a>
             {{else}}
             Not logged In

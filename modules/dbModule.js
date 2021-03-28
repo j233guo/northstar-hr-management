@@ -328,3 +328,15 @@ module.exports.deleteSysAdmByNam = function(usrNam) {
     });
 }
 
+module.exports.validateLogin = function(inputData) {
+    inputData.pwd = hash(inputData.pwd);
+    return new Promise((resolve, reject) => {
+        SysAdm.findAll({
+            where: {username: inputData.username}
+        }).then((usr) => {
+            resolve(usr[0]);
+        }).catch(() =>{
+            reject("username not found");
+        })
+    });
+}

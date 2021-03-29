@@ -363,7 +363,6 @@ module.exports.deleteSysAdmByNam = function(usrNam) {
     });
 }
 
-<<<<<<< HEAD
 module.exports.askforConfirm = ()=>{
     return new Promise((resolve, reject) => {
     let receive = "";
@@ -409,7 +408,7 @@ module.exports.askforConfirm = ()=>{
 
 
 
-=======
+
 module.exports.validateLogin = function(inputData) {
     inputData.pwd = hash(inputData.pwd);
     return new Promise((resolve, reject) => {
@@ -422,4 +421,4 @@ module.exports.validateLogin = function(inputData) {
         })
     });
 }
->>>>>>> 71502a4bffd51c05d779052cdda47268b938e4d8
+

@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+const hash = require("object-hash")
 
 var sequelize = new Sequelize(
     'd2ld2ku09851kr', 
@@ -219,6 +220,7 @@ module.exports.addSysAdm = function(sysadmData) {
                 sysadmData[prop] = null;
             }
         }
+        sysadmData.pwd = hash(sysadmData.pwd);
         SysAdm.findAll({
             where: {username: sysadmData.username}
         }).then((data) => {
@@ -279,6 +281,7 @@ module.exports.updateSysAdm = function(sysadmData) {
                 sysadmData[prop] = null;
             }
         }
+        sysadmData.pwd = hash(sysadmData.pwd);
         SysAdm.update(sysadmData,{
             where: {username: sysadmData.username}
         }).then(() => {

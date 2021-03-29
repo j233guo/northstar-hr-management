@@ -33,13 +33,19 @@
                     <tr>
                         <th>Department Number</th>
                         <th>Department Name</th>
-                        <th></th>
+                        <th>Options</th>
                     </tr>
                     {{#each departments}}
                     <tr>
-                        <td><a href = "/department/{{departmentId}}">{{departmentId}}</a></td>
-                        <td><a href = "/employees?department={{departmentId}}">{{departmentName}}</a></td>
-                        <td>
+                        <td>{{departmentId}}</td>
+                        <td>{{departmentName}}</td>
+                        <td class="buttonlink">
+                            <a href = "/employees?department={{departmentId}}" >
+                                <button class = "btn btn-info">Employee List</button>
+                            </a>
+                            <a href="/departments/{{departmentId}}">
+                                <button class = "btn btn-warning">Update</button>
+                            </a>
                             <a href="/departments/delete/{{departmentId}}">
                                 <button class = "btn btn-danger">Remove</button>
                             </a>

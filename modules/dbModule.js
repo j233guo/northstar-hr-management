@@ -277,33 +277,33 @@ module.exports.updateDepartment = function(departmentData) {
                 departmentData[prop] = null;
             }
         }
-        // Department.findAll({
-        //     where: {departmentName: departmentData.departmentName}
-        // }).then((data) => {
-        //         if (data.length != 0) {
-        //             reject("duplicate department");
-        //         } else {
-        //             Department.update(departmentData,{
-        //                 where: {departmentId: departmentData.departmentId}
-        //             }).then(() => {
-        //                 resolve("department successfully updated");
-        //             }).catch(() => 
-        //                     {
-        //                         reject("unable to update department");
-        //                     });
-        //         }
+        Department.findAll({
+            where: {departmentName: departmentData.departmentName}
+        }).then((data) => {
+                if (data.length != 0) {
+                    reject("duplicate department");
+                } else {
+                    Department.update(departmentData,{
+                        where: {departmentId: departmentData.departmentId}
+                    }).then(() => {
+                        resolve("department successfully updated");
+                    }).catch(() => 
+                            {
+                                reject("unable to update department");
+                            });
+                }
 
-        //     })
+            })
         
 
 
-        Department.update(departmentData,{
-            where: {departmentId: departmentData.departmentId}
-        }).then(() => {
-            resolve("department successfully updated");
-        }).catch(() => {
-            reject("unable to update department");
-        });
+        // Department.update(departmentData,{
+        //     where: {departmentId: departmentData.departmentId}
+        // }).then(() => {
+        //     resolve("department successfully updated");
+        // }).catch(() => {
+        //     reject("unable to update department");
+        // });
           }
     );
 }

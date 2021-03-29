@@ -5,12 +5,12 @@ const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
 const db = require(path.join(__dirname, "/modules/dbModule"));
 const clientSessions = require("client-sessions");
-<<<<<<< HEAD
+
 const yesno = require('yesno');
 const prompts = require('prompts');
-=======
 const hash = require("object-hash");
->>>>>>> 8a4bbc2d6684ce224bab13eb2dbeb76d4fd120f2
+const { response } = require("express");
+
 
 // SETUP
 const HTTP_PORT = process.env.PORT || 8080;
@@ -219,23 +219,57 @@ app.post("/departments/add", (req, res)=>{
 });
 
 app.get("/departments/delete/:id", (req, res) => {
+    let receive = "";
     (async () => {
         const response = await prompts({
-          type: 'number',
+          type: 'text',
           name: 'value',
-          message: 'How old are you?',
-          validate: value => value < 18 ? `Nightclub is 18+ only` : true
+          message: 'Are you sure you want delete this record?'
+        //   validate: value => (value != "yes") ? `reqest canclled` : true
         });
-       
-        console.log(response); // => { value: 24 }
-      })();
-    return;
-    db.deleteDepartmentById(req.params.id)
-    .then(() => {
-        res.redirect("/departments");
-    }).catch((err) => {
-        res.status(500).send(err);
-    })
+        // receive = response.value;
+        console.log(response.value.toUpperCase()); // => { value: 24 }
+        // console.log("111111");
+        if ((response.value.toUpperCase() ==="YES") || (response.value.toUpperCase() ==="Y") ){
+            db.deleteDepartmentById(req.params.id)
+                .then(() => {
+                    res.redirect("/departments");
+                }).catch((err) => {
+                    res.status(500).send(err);
+                }
+            )
+        }
+
+      })().then(console.log("get value" + response.value))
+      .catch((err)=>{
+          res.status(500).send(err);
+      });
+
+    //    let ok = false;
+    //     (async () => {
+    //      ok = await yesno({
+    //         question: 'Are you sure you want to delete?'
+    //     });        
+    //     //  console.log(ok); // => { value: 24 }
+    //    })().then(console.log("ok===" + ok));
+    //    if (!ok) console.log("delete cancelled!");
+    //    else console.log("Processing delete!")
+
+    // db.askforConfirm().then((response)=>{
+    //      console.log("processing")
+    // }).catch((err)=>{
+    //     res.status(500).send(err);
+    // }
+
+   
+    // return;
+    // db.deleteDepartmentById(req.params.id)
+    // .then(() => {
+    //     res.redirect("/departments");
+    // }).catch((err) => {
+    //     res.status(500).send(err);
+    // }
+    // )
 })
 
 app.get("/department/:id", (req, res) => {

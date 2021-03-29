@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
-const hash = require("object-hash")
+const hash = require("object-hash");
+const { response } = require("express");
 
 var sequelize = new Sequelize(
     'd2ld2ku09851kr', 
@@ -205,12 +206,24 @@ module.exports.addDepartment = function(departmentData) {
                 departmentData[prop] = null;
             }
         }
-        Department.create(departmentData).then(() => {
-            resolve("department added");
-        }).catch(() => {
-            reject("unable to create department");
-        });
-    });
+        Department.findAll({
+            where: {departmentName: departmentData.departmentName}
+        }).then((data) => {
+                if (data.length != 0) {
+                    reject("duplicate department");
+                } else {
+                    Department.create(departmentData).then(() => {
+                        resolve("department added");
+                    }).catch(() => 
+                            {
+                                reject("unable to create department");
+                            });
+                }
+
+            }
+         ) 
+        }
+    );
 }
 
 module.exports.addSysAdm = function(sysadmData) {
@@ -264,6 +277,26 @@ module.exports.updateDepartment = function(departmentData) {
                 departmentData[prop] = null;
             }
         }
+        // Department.findAll({
+        //     where: {departmentName: departmentData.departmentName}
+        // }).then((data) => {
+        //         if (data.length != 0) {
+        //             reject("duplicate department");
+        //         } else {
+        //             Department.update(departmentData,{
+        //                 where: {departmentId: departmentData.departmentId}
+        //             }).then(() => {
+        //                 resolve("department successfully updated");
+        //             }).catch(() => 
+        //                     {
+        //                         reject("unable to update department");
+        //                     });
+        //         }
+
+        //     })
+        
+
+
         Department.update(departmentData,{
             where: {departmentId: departmentData.departmentId}
         }).then(() => {
@@ -271,7 +304,8 @@ module.exports.updateDepartment = function(departmentData) {
         }).catch(() => {
             reject("unable to update department");
         });
-    });
+          }
+    );
 }
 
 module.exports.updateSysAdm = function(sysadmData) {
@@ -306,11 +340,6 @@ module.exports.deleteEmployeeByNum = function(empNum) {
 
 module.exports.deleteDepartmentById = function(id) {
     return new Promise((resolve, reject) => {
-    //  var answer = confirm ("Are you sure you want to delete this item ?");
-    //  console(answer);
-    //  alert(answer);
-    //  reject();
-    //  return;
 
         Department.destroy({
             where: {departmentId: id}
@@ -333,4 +362,49 @@ module.exports.deleteSysAdmByNam = function(usrNam) {
         })
     });
 }
+
+module.exports.askforConfirm = ()=>{
+    return new Promise((resolve, reject) => {
+    let receive = "";
+    (async () => {
+        const response = await prompts({
+          type: 'text',
+          name: 'value',
+          message: 'Are you sure you want delete this record?',
+          validate: value => (value != "yes") ? `reqest canclled` : true
+        });
+        receive = response.valye;
+        console.log(response.value); // => { value: 24 }
+    })().then(()=>{console.log("get value" + response);
+        resolve(true);
+        }
+    ).catch((err)=>{
+        console.log(err);
+        reject(false);
+    })
+      
+
+
+
+        // // const response = await prompts({
+        //  prompts({
+        //     type: 'text',
+        //     name: 'value',
+        //     message: 'Are you sure you want delete this record?',
+        //    validate: value => (value != "yes") ? reject("cancelled") : resolve(true)
+        // //   if (value==="yes") resolve(true);
+        //   }).then((response)=>{
+        //       console.log(response.value)
+        //       resolve(true);
+        //     }
+        //   ).catch((err)=>{
+        //       rehect(err);
+        //   })
+       
+    })
+}
+
+
+
+
 

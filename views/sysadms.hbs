@@ -33,6 +33,7 @@
                     <tr>
                         <th>User Name</th>
                         <th>Is Manager</th>
+                        <th>Employee Number</th>
                         <th>Options</th>
                     </tr>
                     {{#each sysadms}}
@@ -45,6 +46,7 @@
                                 No
                             {{/if}}
                         </td>
+                        <td>{{employeeNum}}</td>
                         <td class="buttonlink">
                             <a href="/sysadm/{{username}}">
                                 <button class = "btn btn-warning">Update</button>

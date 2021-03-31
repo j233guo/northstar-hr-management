@@ -50,14 +50,15 @@ var Department = sequelize.define('Department', {
     updatedAt: true
 });
 
-var SysAdm = sequelize.define('SysAdm', {
+var adm = sequelize.define('adm', {
     username: {
         type: Sequelize.STRING,
         primaryKey: true,
         autoIncrement: false
     },
     pwd: Sequelize.STRING,
-    isManager: Sequelize.BOOLEAN
+    isManager: Sequelize.BOOLEAN,
+    employeeNum: Sequelize.INTEGER
 }, {
     createdAt: true,
     updatedAt: true
@@ -101,9 +102,9 @@ module.exports.getDepartments = function() {
     });
 }
 
-module.exports.getSysAdms = function() {
+module.exports.getAdms = function() {
     return new Promise((resolve, reject) => {
-        SysAdm.findAll().then((data) => {
+        adm.findAll().then((data) => {
             data = data.map(value => value.dataValues);
             resolve(data);        
         }).catch((err) => {
@@ -169,9 +170,9 @@ module.exports.getDepartmentById = function(id) {
     });
 }
 
-module.exports.getSysAdmByNam = function(nam) {
+module.exports.getAdmByNam = function(nam) {
     return new Promise((resolve, reject) => {
-        SysAdm.findAll({
+        adm.findAll({
             where: {username: nam}
         }).then((data) => {
             data = data.map(value => value.dataValues);
@@ -214,43 +215,51 @@ module.exports.addDepartment = function(departmentData) {
                 } else {
                     Department.create(departmentData).then(() => {
                         resolve("department added");
-                    }).catch(() => 
-                            {
-                                reject("unable to create department");
-                            });
+                    }).catch(() => {
+                        reject("unable to create department");
+                    });
                 }
-
-            }
-         ) 
+            }) 
         }
     );
 }
 
-module.exports.addSysAdm = function(sysadmData) {
+module.exports.addAdm = function(admData) {
     return new Promise((resolve, reject) => {
-        for (let prop in sysadmData) {
-            if (sysadmData[prop] == '') {
-                sysadmData[prop] = null;
+        for (let prop in admData) {
+            if (admData[prop] == '') {
+                admData[prop] = null;
             }
         }
-        sysadmData.pwd = hash(sysadmData.pwd);
-        SysAdm.findAll({
-            where: {username: sysadmData.username}
-        }).then((data) => {
+        admData.pwd = hash(admData.pwd);
+        adm.findAll({where: {username: admData.username}}).then((data) => {
             if (data.length != 0) {
-                reject("duplicate user name");
+                reject("This user already exists")
             } else {
-                SysAdm.create(sysadmData).then(() => {
-                    resolve("user account added");
-                }).catch(() => {
-                    reject("unable to create user account");
-                });
-                }
+                Employee.findAll({where: {employeeNum: admData.employeeNum}}).then((data)=>{
+                    if (data.length==0) {
+                        reject("This employee does not exist")
+                    } else {
+                        adm.findAll({where: {employeeNum: admData.employeeNum}}).then((data)=>{
+                            if (data.length!=0) {
+                                reject("There is already an account for this employee")
+                            } else {
+                                adm.create(admData).then(() => {
+                                    resolve("user account added");
+                                }).catch(() => {
+                                    reject("unable to create user account");
+                                });
+                            }
+                        })
+                    }
+                })
+            }
         }).catch(() => {
             reject("unable to create user account");
         })
     });
 }
+
 
 module.exports.updateEmployee = function(employeeData) {
     return new Promise((resolve, reject) => {
@@ -287,37 +296,25 @@ module.exports.updateDepartment = function(departmentData) {
                         where: {departmentId: departmentData.departmentId}
                     }).then(() => {
                         resolve("department successfully updated");
-                    }).catch(() => 
-                            {
-                                reject("unable to update department");
-                            });
+                    }).catch(() => {
+                        reject("unable to update department");
+                    });
                 }
-
             })
-        
-
-
-        // Department.update(departmentData,{
-        //     where: {departmentId: departmentData.departmentId}
-        // }).then(() => {
-        //     resolve("department successfully updated");
-        // }).catch(() => {
-        //     reject("unable to update department");
-        // });
-          }
+        }
     );
 }
 
-module.exports.updateSysAdm = function(sysadmData) {
+module.exports.updateAdm = function(admData) {
     return new Promise((resolve, reject) => {
-        for (let prop in sysadmData) {
-            if (sysadmData[prop] == '') {
-                sysadmData[prop] = null;
+        for (let prop in admData) {
+            if (admData[prop] == '') {
+                admData[prop] = null;
             }
         }
-        sysadmData.pwd = hash(sysadmData.pwd);
-        SysAdm.update(sysadmData,{
-            where: {username: sysadmData.username}
+        admData.pwd = hash(admData.pwd);
+        adm.update(admData,{
+            where: {username: admData.username}
         }).then(() => {
             resolve("User account successfully updated");
         }).catch(() => {
@@ -340,7 +337,6 @@ module.exports.deleteEmployeeByNum = function(empNum) {
 
 module.exports.deleteDepartmentById = function(id) {
     return new Promise((resolve, reject) => {
-
         Department.destroy({
             where: {departmentId: id}
         }).then(() => {
@@ -351,9 +347,9 @@ module.exports.deleteDepartmentById = function(id) {
     });
 }
 
-module.exports.deleteSysAdmByNam = function(usrNam) {
+module.exports.deleteAdmByNam = function(usrNam) {
     return new Promise((resolve, reject) => {
-        SysAdm.destroy({
+        adm.destroy({
             where: {username: usrNam}
         }).then(() => {
             resolve("User account successfully deleted");
@@ -365,54 +361,30 @@ module.exports.deleteSysAdmByNam = function(usrNam) {
 
 module.exports.askforConfirm = ()=>{
     return new Promise((resolve, reject) => {
-    let receive = "";
-    (async () => {
-        const response = await prompts({
-          type: 'text',
-          name: 'value',
-          message: 'Are you sure you want delete this record?',
-          validate: value => (value != "yes") ? `reqest canclled` : true
-        });
-        receive = response.valye;
-        console.log(response.value); // => { value: 24 }
-    })().then(()=>{console.log("get value" + response);
-        resolve(true);
-        }
-    ).catch((err)=>{
-        console.log(err);
-        reject(false);
-    })
-      
-
-
-
-        // // const response = await prompts({
-        //  prompts({
-        //     type: 'text',
-        //     name: 'value',
-        //     message: 'Are you sure you want delete this record?',
-        //    validate: value => (value != "yes") ? reject("cancelled") : resolve(true)
-        // //   if (value==="yes") resolve(true);
-        //   }).then((response)=>{
-        //       console.log(response.value)
-        //       resolve(true);
-        //     }
-        //   ).catch((err)=>{
-        //       rehect(err);
-        //   })
-       
+        let receive = "";
+        (async () => {
+            const response = await prompts({
+            type: 'text',
+            name: 'value',
+            message: 'Are you sure you want delete this record?',
+            validate: value => (value != "yes") ? `reqest canclled` : true
+            });
+            receive = response.valye;
+            console.log(response.value); // => { value: 24 }
+        })().then(()=>{console.log("get value" + response);
+            resolve(true);
+            }
+        ).catch((err)=>{
+            console.log(err);
+            reject(false);
+        })
     })
 }
-
-
-
-
-
 
 module.exports.validateLogin = function(inputData) {
     inputData.pwd = hash(inputData.pwd);
     return new Promise((resolve, reject) => {
-        SysAdm.findAll({
+        adm.findAll({
             where: {username: inputData.username}
         }).then((usr) => {
             resolve(usr[0]);
@@ -421,4 +393,3 @@ module.exports.validateLogin = function(inputData) {
         })
     });
 }
-

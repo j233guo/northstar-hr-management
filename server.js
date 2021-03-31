@@ -5,8 +5,6 @@ const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
 const db = require(path.join(__dirname, "/modules/dbModule"));
 const clientSessions = require("client-sessions");
-
-const yesno = require('yesno');
 const prompts = require('prompts');
 const hash = require("object-hash");
 const { response } = require("express");
@@ -79,7 +77,9 @@ app.post("/login", (req, res) => {
         } else {
             req.session.user = {
                 username: usr.username,
-                isManager: usr.isManager
+                isManager: usr.isManager,
+                employeeNum: usr.employeeNum,
+                lname: usr.lname
             };
             res.redirect("/dashboard")
         }        
@@ -301,7 +301,7 @@ app.post("/department/search", (req, res) => {
 
 // SYSADMS
 app.get("/sysadms", (req, res) => {
-    db.getSysAdms()
+    db.getAdms()
     .then((data) => {
         if (data.length > 0) {
             res.render("sysadms", {sysadms: data, user: req.session.user});
@@ -317,7 +317,7 @@ app.get("/sysadms/add", (req,res)=>{
 }); 
 
 app.post("/sysadms/add", (req, res)=>{
-    db.addSysAdm(req.body)
+    db.addAdm(req.body)
     .then(() => {
         res.redirect("/sysadms")
     }).catch((err) => {
@@ -327,7 +327,7 @@ app.post("/sysadms/add", (req, res)=>{
 });
 
 app.get("/sysadms/delete/:usrNam", (req, res) => {
-    db.deleteSysAdmByNam(req.params.usrNam)
+    db.deleteAdmByNam(req.params.usrNam)
     .then(() => {
         res.redirect("/sysadms");
     }).catch((err) => {
@@ -336,7 +336,7 @@ app.get("/sysadms/delete/:usrNam", (req, res) => {
 })
 
 app.get("/sysadm/:usrNam", (req, res) => {
-    db.getSysAdmByNam(req.params.usrNam)
+    db.getAdmByNam(req.params.usrNam)
     .then((data) => {
         if (data) {
             res.render("updateSysAdm", {sysadm: data, user: req.session.user});
@@ -350,7 +350,7 @@ app.get("/sysadm/:usrNam", (req, res) => {
 
 app.post("/sysadm/update", (req, res) => {
     req.body.isManager = (req.body.isManager) ? true: false;
-    db.updateSysAdm(req.body)
+    db.updateAdm(req.body)
     .then(() => {res.redirect("/sysadms");})
     .catch((err) => {
         res.status(500).send(err);

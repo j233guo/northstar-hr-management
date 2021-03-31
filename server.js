@@ -51,10 +51,6 @@ app.get("/", (req, res) => {
     res.render("home", {user: req.session.user})
 })
 
-app.get("/dashboard", (req, res) => {
-    res.render("dashboard", {user: req.session.user, layout: false})
-})
-
 app.get("/login", (req, res) => {
     res.render("login", {user: req.session.user, layout: false})
 })
@@ -78,8 +74,7 @@ app.post("/login", (req, res) => {
             req.session.user = {
                 username: usr.username,
                 isManager: usr.isManager,
-                employeeNum: usr.employeeNum,
-                lname: usr.lname
+                employeeNum: usr.employeeNum
             };
             res.redirect("/dashboard")
         }        
@@ -87,6 +82,10 @@ app.post("/login", (req, res) => {
         res.render("login", {errorMsg: `An error occurred: ${err}`, user: req.session.user, layout: false});
     });
 });
+
+app.get("/dashboard", (req, res) => {
+    res.render("dashboard", {user: req.session.user, layout: false})
+})
 
 app.get("/logout", (req, res) => {
     req.session.reset();
@@ -184,8 +183,13 @@ app.get("/employee/:empNum", (req, res) => {
 
 app.post("/employee/update", (req, res) => {
     db.updateEmployee(req.body)
-    .then(() => {res.redirect("/employees");})
-    .catch((err) => {
+    .then(() => {
+        if (req.session.user.isManager) {
+            res.redirect("/employees");
+        } else {
+            res.redirect("/dashboard")
+        } 
+    }).catch((err) => {
         res.status(500).send(err);
     })
 });

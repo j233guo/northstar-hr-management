@@ -13,6 +13,7 @@
             <h1>Dashboard</h1>
             <br>
             {{#if user}}
+                {{#if user.isManager}}
                 <div style="text-align: center;">
                     <p>
                         <a href="/employees"><button type="button" class="btn btn-primary btn-lg">Employee</button></a><br/>
@@ -24,6 +25,11 @@
                         <a href="/sysadms"><button type="button" class="btn btn-info btn-lg">System Administration</button></a><br/>
                     </p>
                 </div>
+                {{else}}
+                <div style="text-align: center;">
+                    <a href="/employee/{{user.employeeNum}}"><button type="button" class="btn btn-primary btn-lg">View or Update Employee Information</button></a>
+                </div>
+                {{/if}}
             {{else}}
                 <p class="errorMsg">You are not authorized to see this page.</p>
             {{/if}}

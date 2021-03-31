@@ -13,7 +13,7 @@
             <h1>System Administration</h1>
             <br>
 
-            {{#if user}}
+            {{#if user.isManager}}
             <nav class="navbar navbar-light bg-light">
                 <div class="container-fluid">
                     <form class="d-flex" method="post" action="/sysadm/search">

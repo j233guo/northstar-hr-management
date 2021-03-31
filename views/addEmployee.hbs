@@ -11,7 +11,7 @@
             <br/>
             <h1>Add Employee</h1>
             <br/>
-            {{#if user}}
+            {{#if user.isManager}}
                 <div class="row">
                     <main class="col-md-12">
                         <form method = "post" action = "/employees/add">

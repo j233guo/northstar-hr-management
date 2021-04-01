@@ -80,7 +80,9 @@ module.exports.initialize = () => {
 
 module.exports.getAllEmployees = function() {
     return new Promise((resolve, reject) => {
-        Employee.findAll().then((data) => {
+        Employee.findAll({
+            order: ["employeeNum"]
+        }).then((data) => {
             data = data.map(value => value.dataValues);
             resolve(data);
         }).catch((err) => {
@@ -117,7 +119,8 @@ module.exports.getAdms = function() {
 module.exports.getEmployeesByDepartment = function(department) {
     return new Promise((resolve, reject) => {
         Employee.findAll({
-            where: {department: department}
+            where: {department: department},
+            order: ["employeeNum"]
         }).then((data) => {
             data = data.map(value => value.dataValues);
             resolve(data);
@@ -131,7 +134,8 @@ module.exports.getEmployeesByDepartment = function(department) {
 module.exports.getManagers = function() {
     return new Promise((resolve, reject) => {
         Employee.findAll({
-            where: {isManager: true}
+            where: {isManager: true},
+            order: ["employeeNum"]
         }).then((data) => {
             data = data.map(value => value.dataValues);
             resolve(data);

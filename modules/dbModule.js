@@ -367,7 +367,7 @@ module.exports.askforConfirm = ()=>{
             type: 'text',
             name: 'value',
             message: 'Are you sure you want delete this record?',
-            validate: value => (value != "yes") ? `reqest canclled` : true
+            validate: value => (value != "yes") ? `reqest cancelled` : true
             });
             receive = response.valye;
             console.log(response.value); // => { value: 24 }

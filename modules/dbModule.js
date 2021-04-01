@@ -207,6 +207,9 @@ module.exports.addDepartment = function(departmentData) {
                 departmentData[prop] = null;
             }
         }
+        if(departmentData.departmentName===null){
+            reject("department name is empity");
+        }
         Department.findAll({
             where: {departmentName: departmentData.departmentName}
         }).then((data) => {
@@ -286,6 +289,10 @@ module.exports.updateDepartment = function(departmentData) {
                 departmentData[prop] = null;
             }
         }
+        if(departmentData.departmentName===null){
+            reject("department name is empity");
+        }
+
         Department.findAll({
             where: {departmentName: departmentData.departmentName}
         }).then((data) => {

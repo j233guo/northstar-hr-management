@@ -230,10 +230,19 @@ module.exports.addDepartment = function(departmentData) {
 
 module.exports.addAdm = function(admData) {
     return new Promise((resolve, reject) => {
+        admData.isManager = (admData.isManager) ? true : false;
+        let fieldOK = false;
         for (let prop in admData) {
-            if (admData[prop] == '') {
+            if (admData[prop] === '') {
                 admData[prop] = null;
+                fieldOK = false;
+                break;
+            } else {
+                fieldOK = true;
             }
+        }
+        if (!fieldOK) {
+            reject("Some fields left blank");
         }
         admData.pwd = hash(admData.pwd);
         adm.findAll({where: {username: admData.username}}).then((data) => {
@@ -242,7 +251,7 @@ module.exports.addAdm = function(admData) {
             } else {
                 Employee.findAll({where: {employeeNum: admData.employeeNum}}).then((data)=>{
                     if (data.length==0) {
-                        reject("This employee does not exist")
+                        reject("This employee number does not exist")
                     } else {
                         adm.findAll({where: {employeeNum: admData.employeeNum}}).then((data)=>{
                             if (data.length!=0) {
@@ -311,10 +320,19 @@ module.exports.updateDepartment = function(departmentData) {
 
 module.exports.updateAdm = function(admData) {
     return new Promise((resolve, reject) => {
+        admData.isManager = (admData.isManager) ? true : false;
+        let fieldOK = false;
         for (let prop in admData) {
-            if (admData[prop] == '') {
+            if (admData[prop] === '') {
                 admData[prop] = null;
+                fieldOK = false;
+                break;
+            } else {
+                fieldOK = true;
             }
+        }
+        if (!fieldOK) {
+            reject("Some fields left blank");
         }
         admData.pwd = hash(admData.pwd);
         adm.update(admData,{

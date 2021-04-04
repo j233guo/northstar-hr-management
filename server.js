@@ -225,6 +225,7 @@ app.post("/departments/add", (req, res)=>{
 });
 
 app.get("/departments/delete/:id", (req, res) => {
+    
             db.deleteDepartmentById(req.params.id)
                 .then(() => {
                     res.redirect("/departments");

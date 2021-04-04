@@ -225,18 +225,6 @@ app.post("/departments/add", (req, res)=>{
 });
 
 app.get("/departments/delete/:id", (req, res) => {
-    let receive = "";
-    (async () => {
-        const response = await prompts({
-          type: 'text',
-          name: 'value',
-          message: 'Are you sure you want delete this record?'
-        //   validate: value => (value != "yes") ? `reqest canclled` : true
-        });
-        // receive = response.value;
-        console.log(response.value.toUpperCase()); // => { value: 24 }
-        // console.log("111111");
-        if ((response.value.toUpperCase() ==="YES") || (response.value.toUpperCase() ==="Y") ){
             db.deleteDepartmentById(req.params.id)
                 .then(() => {
                     res.redirect("/departments");
@@ -246,37 +234,7 @@ app.get("/departments/delete/:id", (req, res) => {
             )
         }
 
-      })().then(console.log("get value" + response.value))
-      .catch((err)=>{
-          res.status(500).send(err);
-      });
-
-    //    let ok = false;
-    //     (async () => {
-    //      ok = await yesno({
-    //         question: 'Are you sure you want to delete?'
-    //     });        
-    //     //  console.log(ok); // => { value: 24 }
-    //    })().then(console.log("ok===" + ok));
-    //    if (!ok) console.log("delete cancelled!");
-    //    else console.log("Processing delete!")
-
-    // db.askforConfirm().then((response)=>{
-    //      console.log("processing")
-    // }).catch((err)=>{
-    //     res.status(500).send(err);
-    // }
-
-   
-    // return;
-    // db.deleteDepartmentById(req.params.id)
-    // .then(() => {
-    //     res.redirect("/departments");
-    // }).catch((err) => {
-    //     res.status(500).send(err);
-    // }
-    // )
-})
+)
 
 app.get("/department/:id", (req, res) => {
     db.getDepartmentById(req.params.id)

@@ -246,33 +246,34 @@ module.exports.addAdm = function(admData) {
         }
         if (!fieldOK) {
             reject("Some fields left blank");
+        } else {
+            admData.pwd = hash(admData.pwd);
+            adm.findAll({ where: { username: admData.username } }).then((data) => {
+                if (data.length != 0) {
+                    reject("This user already exists")
+                } else {
+                    Employee.findAll({ where: { employeeNum: admData.employeeNum } }).then((data) => {
+                        if (data.length == 0) {
+                            reject("This employee number does not exist")
+                        } else {
+                            adm.findAll({ where: { employeeNum: admData.employeeNum } }).then((data) => {
+                                if (data.length != 0) {
+                                    reject("There is already an account for this employee number")
+                                } else {
+                                    adm.create(admData).then(() => {
+                                        resolve("user account added");
+                                    }).catch(() => {
+                                        reject("unable to create user account");
+                                    });
+                                }
+                            })
+                        }
+                    })
+                }
+            }).catch(() => {
+                reject("unable to create user account");
+            })
         }
-        admData.pwd = hash(admData.pwd);
-        adm.findAll({where: {username: admData.username}}).then((data) => {
-            if (data.length != 0) {
-                reject("This user already exists")
-            } else {
-                Employee.findAll({where: {employeeNum: admData.employeeNum}}).then((data)=>{
-                    if (data.length==0) {
-                        reject("This employee number does not exist")
-                    } else {
-                        adm.findAll({where: {employeeNum: admData.employeeNum}}).then((data)=>{
-                            if (data.length!=0) {
-                                reject("There is already an account for this employee")
-                            } else {
-                                adm.create(admData).then(() => {
-                                    resolve("user account added");
-                                }).catch(() => {
-                                    reject("unable to create user account");
-                                });
-                            }
-                        })
-                    }
-                })
-            }
-        }).catch(() => {
-            reject("unable to create user account");
-        })
     });
 }
 
@@ -340,15 +341,16 @@ module.exports.updateAdm = function(admData) {
         }
         if (!fieldOK) {
             reject("Some fields left blank");
-        }
-        admData.pwd = hash(admData.pwd);
-        adm.update(admData,{
-            where: {username: admData.username}
-        }).then(() => {
-            resolve("User account successfully updated");
-        }).catch(() => {
-            reject("unable to update user account");
-        });
+        } else {
+            admData.pwd = hash(admData.pwd);
+            adm.update(admData, {
+                where: { username: admData.username }
+            }).then(() => {
+                resolve("User account successfully updated");
+            }).catch(() => {
+                reject("unable to update user account");
+            });
+        };
     });
 }
 
@@ -388,6 +390,19 @@ module.exports.deleteAdmByNam = function(usrNam) {
     });
 }
 
+module.exports.validateLogin = function(inputData) {
+    inputData.pwd = hash(inputData.pwd);
+    return new Promise((resolve, reject) => {
+        adm.findAll({
+            where: {username: inputData.username}
+        }).then((usr) => {
+            resolve(usr[0]);
+        }).catch(() =>{
+            reject("username not found");
+        })
+    });
+}
+
 module.exports.askforConfirm = ()=>{
     return new Promise((resolve, reject) => {
         let receive = "";
@@ -410,15 +425,3 @@ module.exports.askforConfirm = ()=>{
     })
 }
 
-module.exports.validateLogin = function(inputData) {
-    inputData.pwd = hash(inputData.pwd);
-    return new Promise((resolve, reject) => {
-        adm.findAll({
-            where: {username: inputData.username}
-        }).then((usr) => {
-            resolve(usr[0]);
-        }).catch(() =>{
-            reject("username not found");
-        })
-    });
-}

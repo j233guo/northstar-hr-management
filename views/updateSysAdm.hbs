@@ -11,6 +11,9 @@
             <br/>
             <h1>User Account Information</h1>
             <br/>
+            {{#if errorMsg}}
+                <p class="errorMsg">{{errorMsg}}</p>
+            {{/if}}
             {{#if user.isManager}}
                 <div class="row">
                     <div class="col-md-12">

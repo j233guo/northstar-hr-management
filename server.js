@@ -269,9 +269,9 @@ app.get("/sysadms", (req, res) => {
         if (data.length > 0) {
             res.render("sysadms", {sysadms: data, user: req.session.user});
         } else {
-            res.render("sysadms", {message: "no results", user: req.session.user})
+            res.render("sysadms", {errorMsg: "no results", user: req.session.user})
     }}).catch(() => {
-        res.render("sysadms", {message: "Encountered error"});
+        res.render("sysadms", {errorMsg: "Encountered error"});
     })
 });
 
@@ -284,8 +284,7 @@ app.post("/sysadms/add", (req, res)=>{
     .then(() => {
         res.redirect("/sysadms")
     }).catch((err) => {
-        // res.status(500).send(err);
-        res.status(404).send(err);
+        res.render("addSysAdm", {errorMsg: err, user: req.session.user});
     })    
 });
 
@@ -304,10 +303,10 @@ app.get("/sysadm/:usrNam", (req, res) => {
         if (data) {
             res.render("updateSysAdm", {sysadm: data, user: req.session.user});
         } else {
-            res.status(404).send("User Account Not Found");
+            res.render("sysadms", {errorMsg: "User Account Not Found", user: req.session.user});
         }
     }).catch(() => {
-        res.render("updateSysAdm", {message: "Encountered Error", user: req.session.user});
+        res.render("updateSysAdm", {errorMsg: "Encountered Error", user: req.session.user});
     })
 });
 
@@ -316,12 +315,16 @@ app.post("/sysadm/update", (req, res) => {
     db.updateAdm(req.body)
     .then(() => {res.redirect("/sysadms");})
     .catch((err) => {
-        res.status(500).send(err);
+        res.render("updateSysAdm", {sysadm: req.body, errorMsg: err, user: req.session.user});
     })
 });
 
 app.post("/sysadm/search", (req, res) => {
-    res.redirect("/sysadm/" + req.body.username)
+    if (req.body.username != "") {
+        res.redirect("/sysadm/" + req.body.username)
+    } else {
+        res.redirect("/sysadms")
+    }
 });
 
 // INITIALIZE

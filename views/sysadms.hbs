@@ -7,12 +7,13 @@
     </head>
     <body>
         {{> header user}}
-
         <div class="container">
             <br/>
             <h1>System Administration</h1>
             <br>
-
+            {{#if errorMsg}}
+                <p class="errorMsg">{{errorMsg}}</p>
+            {{/if}}
             {{#if user.isManager}}
             <nav class="navbar navbar-light bg-light">
                 <div class="container-fluid">
@@ -59,11 +60,6 @@
                     {{/each}}
                 </table>
             </div>  
-            {{#unless sysadms}}
-                <div class="text-center">
-                    <strong>{{message}}</strong>
-                </div>
-            {{/unless}}
             {{else}}
                 <p class="errorMsg">You are not authorized to see this page.</p>
             {{/if}}

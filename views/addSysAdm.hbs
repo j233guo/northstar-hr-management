@@ -10,7 +10,10 @@
         <div class="container">
             <br/>
             <h1>Add User Account</h1>
-            <br/>
+            <br>
+            {{#if errorMsg}}
+                <p class="errorMsg">{{errorMsg}}</p>
+            {{/if}}
             {{#if user.isManager}}
                 <div class="row">
                     <main class="col-md-12">

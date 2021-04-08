@@ -80,7 +80,9 @@ module.exports.initialize = () => {
 
 module.exports.getAllEmployees = function() {
     return new Promise((resolve, reject) => {
-        Employee.findAll().then((data) => {
+        Employee.findAll({
+            order: ["employeeNum"]
+        }).then((data) => {
             data = data.map(value => value.dataValues);
             resolve(data);
         }).catch((err) => {
@@ -117,7 +119,8 @@ module.exports.getAdms = function() {
 module.exports.getEmployeesByDepartment = function(department) {
     return new Promise((resolve, reject) => {
         Employee.findAll({
-            where: {department: department}
+            where: {department: department},
+            order: ["employeeNum"]
         }).then((data) => {
             data = data.map(value => value.dataValues);
             resolve(data);
@@ -131,7 +134,8 @@ module.exports.getEmployeesByDepartment = function(department) {
 module.exports.getManagers = function() {
     return new Promise((resolve, reject) => {
         Employee.findAll({
-            where: {isManager: true}
+            where: {isManager: true},
+            order: ["employeeNum"]
         }).then((data) => {
             data = data.map(value => value.dataValues);
             resolve(data);
@@ -229,37 +233,47 @@ module.exports.addDepartment = function(departmentData) {
 
 module.exports.addAdm = function(admData) {
     return new Promise((resolve, reject) => {
+        admData.isManager = (admData.isManager) ? true : false;
+        let fieldOK = false;
         for (let prop in admData) {
-            if (admData[prop] == '') {
+            if (admData[prop] === '') {
                 admData[prop] = null;
+                fieldOK = false;
+                break;
+            } else {
+                fieldOK = true;
             }
         }
-        admData.pwd = hash(admData.pwd);
-        adm.findAll({where: {username: admData.username}}).then((data) => {
-            if (data.length != 0) {
-                reject("This user already exists")
-            } else {
-                Employee.findAll({where: {employeeNum: admData.employeeNum}}).then((data)=>{
-                    if (data.length==0) {
-                        reject("This employee does not exist")
-                    } else {
-                        adm.findAll({where: {employeeNum: admData.employeeNum}}).then((data)=>{
-                            if (data.length!=0) {
-                                reject("There is already an account for this employee")
-                            } else {
-                                adm.create(admData).then(() => {
-                                    resolve("user account added");
-                                }).catch(() => {
-                                    reject("unable to create user account");
-                                });
-                            }
-                        })
-                    }
-                })
-            }
-        }).catch(() => {
-            reject("unable to create user account");
-        })
+        if (!fieldOK) {
+            reject("Some fields left blank");
+        } else {
+            admData.pwd = hash(admData.pwd);
+            adm.findAll({ where: { username: admData.username } }).then((data) => {
+                if (data.length != 0) {
+                    reject("This user already exists")
+                } else {
+                    Employee.findAll({ where: { employeeNum: admData.employeeNum } }).then((data) => {
+                        if (data.length == 0) {
+                            reject("This employee number does not exist")
+                        } else {
+                            adm.findAll({ where: { employeeNum: admData.employeeNum } }).then((data) => {
+                                if (data.length != 0) {
+                                    reject("There is already an account for this employee number")
+                                } else {
+                                    adm.create(admData).then(() => {
+                                        resolve("user account added");
+                                    }).catch(() => {
+                                        reject("unable to create user account");
+                                    });
+                                }
+                            })
+                        }
+                    })
+                }
+            }).catch(() => {
+                reject("unable to create user account");
+            })
+        }
     });
 }
 
@@ -314,19 +328,29 @@ module.exports.updateDepartment = function(departmentData) {
 
 module.exports.updateAdm = function(admData) {
     return new Promise((resolve, reject) => {
+        admData.isManager = (admData.isManager) ? true : false;
+        let fieldOK = false;
         for (let prop in admData) {
-            if (admData[prop] == '') {
+            if (admData[prop] === '') {
                 admData[prop] = null;
+                fieldOK = false;
+                break;
+            } else {
+                fieldOK = true;
             }
         }
-        admData.pwd = hash(admData.pwd);
-        adm.update(admData,{
-            where: {username: admData.username}
-        }).then(() => {
-            resolve("User account successfully updated");
-        }).catch(() => {
-            reject("unable to update user account");
-        });
+        if (!fieldOK) {
+            reject("Some fields left blank");
+        } else {
+            admData.pwd = hash(admData.pwd);
+            adm.update(admData, {
+                where: { username: admData.username }
+            }).then(() => {
+                resolve("User account successfully updated");
+            }).catch(() => {
+                reject("unable to update user account");
+            });
+        };
     });
 }
 
@@ -366,6 +390,19 @@ module.exports.deleteAdmByNam = function(usrNam) {
     });
 }
 
+module.exports.validateLogin = function(inputData) {
+    inputData.pwd = hash(inputData.pwd);
+    return new Promise((resolve, reject) => {
+        adm.findAll({
+            where: {username: inputData.username}
+        }).then((usr) => {
+            resolve(usr[0]);
+        }).catch(() =>{
+            reject("username not found");
+        })
+    });
+}
+
 module.exports.askforConfirm = ()=>{
     return new Promise((resolve, reject) => {
         let receive = "";
@@ -374,7 +411,7 @@ module.exports.askforConfirm = ()=>{
             type: 'text',
             name: 'value',
             message: 'Are you sure you want delete this record?',
-            validate: value => (value != "yes") ? `reqest canclled` : true
+            validate: value => (value != "yes") ? `reqest cancelled` : true
             });
             receive = response.valye;
             console.log(response.value); // => { value: 24 }
@@ -388,15 +425,3 @@ module.exports.askforConfirm = ()=>{
     })
 }
 
-module.exports.validateLogin = function(inputData) {
-    inputData.pwd = hash(inputData.pwd);
-    return new Promise((resolve, reject) => {
-        adm.findAll({
-            where: {username: inputData.username}
-        }).then((usr) => {
-            resolve(usr[0]);
-        }).catch(() =>{
-            reject("username not found");
-        })
-    });
-}

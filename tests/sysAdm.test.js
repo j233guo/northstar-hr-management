@@ -1,4 +1,4 @@
-const db = require('./modules/dbModule');
+const db = require('../modules/dbModule');
 
 describe('Test add, update and delete in System Administration page', () => {
     test('add user account with all empty fields', async () => {

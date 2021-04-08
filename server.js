@@ -340,3 +340,5 @@ db.initialize().then(() => {
 app.use((req, res) => {
     res.status(404).send("Page Does Not Exist");
 });
+
+module.exports = app;

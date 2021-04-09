@@ -43,7 +43,11 @@ app.use(clientSessions({
     cookieName: 'session',
     secret: 'northstarhrmgmt',
     duration: 5 * 60 * 1000,
-    activeDuration: 1000 * 60 * 5
+    activeDuration: 1000 * 60 * 5,
+    cookie: {
+        ephemeral: true, // when true, cookie expires when the browser closes
+        secure: false // when true, cookie will only be sent over SSL. use key 'secureProxy' instead if you handle SSL not in your node process
+    }
 }));
 
 // ROUTES
@@ -225,17 +229,13 @@ app.post("/departments/add", (req, res)=>{
 });
 
 app.get("/departments/delete/:id", (req, res) => {
-    
-            db.deleteDepartmentById(req.params.id)
-                .then(() => {
-                    res.redirect("/departments");
-                }).catch((err) => {
-                    res.status(500).send(err);
-                }
-            )
-        }
-
-)
+    db.deleteDepartmentById(req.params.id)
+    .then(() => {
+        res.redirect("/departments");
+    }).catch((err) => {
+        res.status(500).send(err);
+    })
+});
 
 app.get("/department/:id", (req, res) => {
     db.getDepartmentById(req.params.id)

@@ -80,7 +80,13 @@ app.post("/login", (req, res) => {
                 isManager: usr.isManager,
                 employeeNum: usr.employeeNum
             };
-            res.redirect("/dashboard")
+            db.addLog({activityId:'',activityType:'login',activityTime:Date.now(),description: usr.username})
+            .then(() => {
+                res.redirect("/dashboard")
+            }).catch((err) => {
+                res.status(500).send(err);
+            })
+ 
         }        
     }).catch((err)=>{
         res.render("login", {errorMsg: `An error occurred: ${err}`, user: req.session.user, layout: false});
@@ -92,8 +98,13 @@ app.get("/dashboard", (req, res) => {
 })
 
 app.get("/logout", (req, res) => {
-    req.session.reset();
-    res.redirect("/");
+    db.addLog({activityId:'',activityType:'logout',activityTime:Date.now(),description: req.session.user.username})
+    .then(() => {
+            req.session.reset();
+            res.redirect("/");
+        }).catch((err) => {
+        res.status(500).send(err);
+    })
 })
 
 app.get("/about", (req, res) => {

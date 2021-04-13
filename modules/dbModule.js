@@ -425,3 +425,37 @@ module.exports.askforConfirm = ()=>{
     })
 }
 
+
+var SystemLog = sequelize.define('SystemLog', {
+    
+    activityId: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    }, 
+    activityType:Sequelize.STRING,
+    activityTime: Sequelize.DATE,
+    description: Sequelize.STRING
+}, {
+    createdAt: true,
+    updatedAt: true
+});
+
+module.exports.addLog = function(logData) {
+    console.log(logData);
+    return new Promise((resolve, reject) => {
+        for (let prop in logData) {
+            if (logData[prop] == '') {
+                logData[prop] = null;
+            }
+        }
+        SystemLog.create(logData).then(() => {
+            resolve("log added");
+        }).catch((err) => {
+            console.log(err);
+            reject("unable to create log");
+        });
+        }
+    );
+}
+

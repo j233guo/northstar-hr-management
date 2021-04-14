@@ -42,8 +42,8 @@ app.set("view engine", ".hbs");
 app.use(clientSessions({
     cookieName: 'session',
     secret: 'northstarhrmgmt',
-    duration: 5 * 60 * 1000,
-    activeDuration: 1000 * 60 * 5,
+    duration: 2 * 60 * 1000,
+    activeDuration: 1000 * 60,
     cookie: {
         ephemeral: true, // when true, cookie expires when the browser closes
         secure: false // when true, cookie will only be sent over SSL. use key 'secureProxy' instead if you handle SSL not in your node process

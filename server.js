@@ -42,7 +42,7 @@ app.set("view engine", ".hbs");
 app.use(clientSessions({
     cookieName: 'session',
     secret: 'northstarhrmgmt',
-    duration: 2 * 60 * 1000,
+    duration: 10 * 60 * 1000,
     activeDuration: 1000 * 60,
     cookie: {
         ephemeral: true, // when true, cookie expires when the browser closes

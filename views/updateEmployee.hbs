@@ -80,13 +80,14 @@
                                         <input class="form-check-input" id="isManager" name="isManager" type="checkbox" 
                                             {{#if viewData.employee.isManager}}
                                                 checked
-                                            {{/if}}/>
+                                            {{/if}}
+                                            {{#unless user.isManager}}disabled{{/unless}}/>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                         <label for="employeeManagerNum">Employee's Manager Number:</label>
-                                        <input class="form-control" id="employeeManagerNum" name="employeeManagerNum" type="text" value="{{viewData.employee.employeeManagerNum}}" />
+                                        <input class="form-control" id="employeeManagerNum" name="employeeManagerNum" type="text" value="{{viewData.employee.employeeManagerNum}}" {{#unless user.isManager}}readonly{{/unless}}/>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -94,11 +95,11 @@
                                         <label for="status">Status: </label><br>
                                             <label class="checkbox-inline">
                                                 <input type="radio" name = "status" value="Full Time" 
-                                                {{#equal viewData.employee.status "Full Time"}} checked {{/equal}}/> Full Time
+                                                {{#equal viewData.employee.status "Full Time"}} checked {{/equal}} {{#unless user.isManager}}disabled{{/unless}}/> Full Time 
                                             </label>
                                             <label class="checkbox-inline">
                                                 <input type="radio" name = "status" value="Part Time"
-                                                {{#equal viewData.employee.status "Part Time"}}checked{{/equal}}/> Part Time
+                                                {{#equal viewData.employee.status "Part Time"}}checked{{/equal}} {{#unless user.isManager}}disabled{{/unless}}/> Part Time 
                                             </label>
                                         </div>
                                     </div>
@@ -106,11 +107,11 @@
                                         <div class="form-group">
                                             <label>Department</label>
                                             {{#if viewData.departments}}
-                                            <select class="form-control" name="department" id="department">
+                                            <select class="form-control" name="department" id="department" {{#unless user.isManager}}disabled{{/unless}}>
                                                 <option value="">Select Department</option>
                                                 {{#each viewData.departments}}
                                                 <option value="{{departmentId}}" {{#if selected}} selected {{/if}} >{{departmentName}} </option>
-                                                {{/each}}
+                                                {{/each}}                                                
                                             </select>
                                             {{else}}
                                                 <div>No Departments</div>
